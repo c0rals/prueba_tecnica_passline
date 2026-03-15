@@ -1,0 +1,168 @@
+{
+  "info": {
+    "name": "Book Store API - MVP",
+    "_postman_id": "00000000-0000-0000-0000-000000000001",
+    "description": "Colección mínima de tests de API para la aplicación Book Store (login, admin, catálogo).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /books - catálogo (éxito)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/books",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "books"
+          ]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Responde HTML (vista EJS)\", function () {",
+              "    pm.expect(pm.response.text()).to.include(\"<!DOCTYPE html\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GET /admin sin login - autorización (negativo)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/admin",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "admin"
+          ]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Redirige cuando no hay sesión\", function () {",
+              "    pm.expect([301, 302]).to.include(pm.response.code);",
+              "});",
+              "",
+              "pm.test(\"Location apunta a /users/login\", function () {",
+              "    var location = pm.response.headers.get(\"Location\");",
+              "    pm.expect(location).to.include(\"/users/login\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Login admin",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/x-www-form-urlencoded",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "email",
+              "value": "{{adminEmail}}",
+              "type": "text"
+            },
+            {
+              "key": "password",
+              "value": "{{adminPassword}}",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/users/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "users",
+            "login"
+          ]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Login admin redirige correctamente\", function () {",
+              "    pm.expect([301, 302]).to.include(pm.response.code);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GET /admin con sesión admin",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/admin",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "admin"
+          ]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Dashboard admin responde 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Contenido parece ser dashboard de admin\", function () {",
+              "    pm.expect(pm.response.text()).to.include(\"Admin\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": []
+}
+
