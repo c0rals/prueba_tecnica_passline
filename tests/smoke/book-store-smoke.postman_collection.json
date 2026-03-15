@@ -1,0 +1,177 @@
+{
+  "info": {
+    "name": "BookStore Smoke Tests",
+    "_postman_id": "9b52a9c1-2f9c-4c89-b1e0-123456789abc",
+    "description": "Smoke tests para verificar que el deploy de BookStore quedó sano.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "http://localhost:5050"
+    },
+    {
+      "key": "ADMIN_EMAIL",
+      "value": "admin@bookstore.local"
+    },
+    {
+      "key": "ADMIN_PASSWORD",
+      "value": "Password123!"
+    },
+    {
+      "key": "cookie",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "1 - GET /books (catalogo)",
+      "request": {
+        "method": "GET",
+        "url": "{{BASE_URL}}/books"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status es 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Contiene HTML', function () {",
+              "    pm.expect(pm.response.text()).to.include('<!DOCTYPE html');",
+              "});",
+              "",
+              "pm.test('Contiene Book Store', function () {",
+              "    pm.expect(pm.response.text()).to.include('Book Store');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "2 - GET /users/login",
+      "request": {
+        "method": "GET",
+        "url": "{{BASE_URL}}/users/login"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Login page responde 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "3 - GET /admin sin sesión",
+      "request": {
+        "method": "GET",
+        "url": "{{BASE_URL}}/admin"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Admin redirige', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([301,302]);",
+              "});",
+              "",
+              "const location = pm.response.headers.get('Location');",
+              "",
+              "pm.test('Redirige a login', function () {",
+              "    pm.expect(location).to.include('/users/login');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "4 - POST /users/login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/x-www-form-urlencoded"
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "email",
+              "value": "{{ADMIN_EMAIL}}"
+            },
+            {
+              "key": "password",
+              "value": "{{ADMIN_PASSWORD}}"
+            }
+          ]
+        },
+        "url": "{{BASE_URL}}/users/login"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Login responde 200 o 302', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200,302]);",
+              "});",
+              "",
+              "const cookie = pm.response.headers.get('Set-Cookie');",
+              "",
+              "pm.test('Recibe cookie de sesión', function () {",
+              "    pm.expect(cookie).to.not.be.undefined;",
+              "});",
+              "",
+              "if (cookie) {",
+              "    const session = cookie.split(';')[0];",
+              "    pm.collectionVariables.set('cookie', session);",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "5 - GET /admin con sesión",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "{{cookie}}"
+          }
+        ],
+        "url": "{{BASE_URL}}/admin"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Admin responde 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Contiene Admin Panel', function () {",
+              "    pm.expect(pm.response.text()).to.include('Admin Panel');",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

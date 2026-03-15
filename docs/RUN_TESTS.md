@@ -44,7 +44,7 @@ Archivo del test:
 
 1. **Requisitos previos**
    - Python 3 instalado
-   - Paquete Selenium para Python:
+   - Paquete Selenium para Python
    - Driver del navegador (ejemplo: ChromeDriver para Google Chrome) instalado y disponible en el `PATH` o con ruta configurada en el script.
 
 2. **Ejecutar el test Selenium**

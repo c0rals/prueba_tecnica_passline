@@ -11,7 +11,7 @@
 - **Admin**: dashboard con métricas/listados (books/users/orders).
 
 ## Módulos/áreas principales del sistema
-(basado en rutas y middleware)
+(basado middleware y routes)
 
 - **`/users`**: registro, login/logout, dashboard, carrito, checkout, orden, historial.
 - **`/books`**: home (catálogo), view (detalle + comentarios), new/edit/delete (admin).
@@ -22,10 +22,6 @@
   - `checkAuthentication`: requiere sesión.
   - `checkAuthorization`: requiere rol `admin`.
   - `checkCommentOwnerShip`: autor del comentario.
-
-- **Integraciones**:
-  - Stripe: `STRIPE_SECRET_KEY` (pago).
-  - SMTP: `EMAIL_SMTP_*` + `EMAIL_SENDER_ADDRESS` (correo).
 
 ## Flujos críticos de negocio
 
@@ -45,11 +41,10 @@
 - **Emails**: fallas de SMTP bloquean registro/orden si no hay manejo robusto de errores.
 
 ### Riesgos técnicos / calidad
-- **Dependencia de integraciones externas** (Stripe/SMTP) rompe tests si no se stubbea.
+- **Dependencia de integraciones externas** (Stripe/SMTP)
 - **Validaciones insuficientes**: inputs malformados (precio, email, cantidades).
 - **Sesión y autorización**: bypass de rutas protegidas; redirect “back” no determinista.
 - **Concurrencia / consistencia**: carrito se modifica por update parcial; cantidades vienen de `req.body` con keys dinámicas.
-- **Errores no manejados**: múltiples rutas hacen `console.log` y redirigen; poca observabilidad.
 
 ## Qué automatizar primero y por qué
 1. **register/login**  
