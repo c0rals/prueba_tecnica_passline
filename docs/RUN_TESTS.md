@@ -35,7 +35,7 @@ Archivos del test:
 	     - caso negativo,
 	     - flujo de negocio (login admin + acceso a `/admin`).
 
-## Cómo ejecutar el test E2E (Selenium Puthon)
+## Cómo ejecutar el test E2E (Selenium Python)
 
 Archivo del test:
 - `tests/e2e/test_login_and_browse.py`
@@ -53,3 +53,27 @@ Archivo del test:
    ```bash
    python tests/e2e/test_login_and_browse.py
    ```
+
+---
+
+## Cómo ejecutar el Smoke test (Postman)
+
+Archivo del test: 
+- `tests/smoke/book-store-smoke.postman_collection.json`
+- `tests/api/book-store-local.postman_environment.json`
+
+---
+
+1. **Requisitos previos**
+	- Postman instalado
+
+2. **Ejecutar colección**
+	1. Abrir Postman.
+	2. Importar:
+	   - la colección `tests/smoke/book-store-smoke.postman_collection.json`
+	   - el environment `tests/api/book-store-local.postman_environment.json`
+	3. Seleccionar el environment **“Book Store Local”**
+	4. Ejecutar la colección (Run collection):
+			- Esto correrá los 5 requests definidos
+
+---
