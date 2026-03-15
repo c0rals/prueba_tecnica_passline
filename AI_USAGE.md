@@ -25,6 +25,8 @@
 
 - Basicamente me ayudó a analizar todo el codigo en un par de instancias para poder corroborar mi trabajo y dar formato a los textos. A demás, es mas facil trabajar teniendo un respaldo que verifica automaticamente si mi trabajo tiene sentido. 
 
+- Tambien se utilizó para definir bien los test de API y Smoke
+
 ## Partes adaptadas manualmente 
 
 - Para el caso de los riesgos tuve que eliminar los que hablaban del Stripe ya que la aplicación era solo para testing

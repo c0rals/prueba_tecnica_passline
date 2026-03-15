@@ -9,6 +9,7 @@
 ## Stack o herramientas elegidas 
 
 - Api testing: Postman
+- Smoke tests: Postman
 - e2e testing: Selenium en Python
 - CI/CD 	 : GitHub
 
